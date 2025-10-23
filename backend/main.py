@@ -442,9 +442,9 @@ if __name__ == "__main__":
     load_dotenv(dotenv_path=env_path)
     
     # 从环境变量读取配置
-    host = os.getenv("HOST", "0.0.0.0")
-    port = int(os.getenv("PORT", "8000"))
+    host = os.getenv("SERVER_HOST", "0.0.0.0")
+    port = int(os.getenv("SERVER_PORT", "8000"))
     reload = os.getenv("RELOAD", "true").lower() == "true"
     
-    print(f"🚀 启动配置: HOST={host}, PORT={port}, RELOAD={reload}")
+    print(f"🚀 启动配置: SERVER_HOST={host}, SERVER_PORT={port}, RELOAD={reload}")
     uvicorn.run("main:app", host=host, port=port, reload=reload)
