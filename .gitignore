@@ -52,18 +52,17 @@ backend/dist/
 *.swo
 *~
 .DS_Store
+.ipynb_checkpoints/
 
-# Uploads and submissions (可能包含用户数据)
+# Uploads (用户上传的文件)
 uploads/
-submissions/
 
-# Compressed files (已有源文件的压缩包)
-*.zip
-*.tar.gz
-*.rar
-*.7z
+# Submissions (学生提交的文件，但保留baseline)
+submissions/*
+!submissions/cci_ml_baseline.csv
+!submissions/.gitkeep
 
-# Database
+# Database (运行时生成)
 *.db
 *.sqlite
 *.sqlite3
@@ -77,15 +76,11 @@ logs/
 htmlcov/
 .pytest_cache/
 
-# Kaggle dataset (大文件，可以单独管理)
-kaggle_dataset/
-kaggle_dataset.tar.gz
-ccitest.zip
-cci test/
-
-# Teacher only materials (敏感数据)
+# Teacher only materials (敏感数据 - 包含答案)
 teacher_only/
 teacher_only.tar.gz
+cci test/answer/
+*/answer/
 
 # Temporary files
 *.tmp
