@@ -67,9 +67,11 @@ app = FastAPI(
 )
 
 # CORS配置 - 允许前端跨域访问
+# 从环境变量读取允许的源，默认为所有（开发环境）
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "*").split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 生产环境应该设置具体的域名
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -433,4 +435,8 @@ def download_dataset(competition_id: int, db: Session = Depends(get_db)):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    # 从环境变量读取配置
+    host = os.getenv("HOST", "0.0.0.0")
+    port = int(os.getenv("PORT", "8000"))
+    reload = os.getenv("RELOAD", "true").lower() == "true"
+    uvicorn.run("main:app", host=host, port=port, reload=reload)

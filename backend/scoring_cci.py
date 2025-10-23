@@ -3,7 +3,11 @@ CCI竞赛评分服务 - 细胞间相互作用预测
 """
 import csv
 import os
+from pathlib import Path
 from typing import Dict, List
+
+# 获取项目根目录
+ROOT_DIR = Path(__file__).resolve().parent.parent
 
 
 def load_csv_as_dict(filename: str, key_cols: List[str]) -> Dict:

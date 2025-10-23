@@ -21,7 +21,12 @@ wheels/
 *.egg
 MANIFEST
 *.log
+
+# Environment variables
 .env
+.env.local
+
+# Virtual environments
 .venv
 env/
 venv/

@@ -3,7 +3,11 @@
 """
 import csv
 import os
+from pathlib import Path
 from typing import Dict, Tuple, List
+
+# 获取项目根目录
+ROOT_DIR = Path(__file__).resolve().parent.parent
 
 
 def load_csv_as_dict(filename: str, key_cols: List[str]) -> Dict:
@@ -20,7 +24,7 @@ def load_csv_as_dict(filename: str, key_cols: List[str]) -> Dict:
     return data
 
 
-def evaluate_submission(submission_file: str, labels_file: str = '../teacher_only/test_labels.csv') -> Dict:
+def evaluate_submission(submission_file: str, labels_file: str = None) -> Dict:
     """
     评估提交文件
     
@@ -40,6 +44,9 @@ def evaluate_submission(submission_file: str, labels_file: str = '../teacher_onl
         'error_message': str (if error)
     }
     """
+    # 如果没有提供labels_file，使用默认路径
+    if labels_file is None:
+        labels_file = str(ROOT_DIR / "teacher_only" / "test_labels.csv")
     
     # 检查文件是否存在
     if not os.path.exists(submission_file):
