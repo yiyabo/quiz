@@ -76,11 +76,8 @@ logs/
 htmlcov/
 .pytest_cache/
 
-# Teacher only materials (敏感数据 - 包含答案)
-teacher_only/
-teacher_only.tar.gz
-cci test/answer/
-*/answer/
+# 注意：答案文件已上传到仓库，因为需要在服务器上评分
+# 学生只能访问网站，看不到代码仓库，所以不会泄密
 
 # Temporary files
 *.tmp
