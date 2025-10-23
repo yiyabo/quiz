@@ -435,8 +435,16 @@ def download_dataset(competition_id: int, db: Session = Depends(get_db)):
 
 if __name__ == "__main__":
     import uvicorn
+    from dotenv import load_dotenv
+    
+    # 加载 .env 文件
+    env_path = Path(__file__).parent.parent / ".env"
+    load_dotenv(dotenv_path=env_path)
+    
     # 从环境变量读取配置
     host = os.getenv("HOST", "0.0.0.0")
     port = int(os.getenv("PORT", "8000"))
     reload = os.getenv("RELOAD", "true").lower() == "true"
+    
+    print(f"🚀 启动配置: HOST={host}, PORT={port}, RELOAD={reload}")
     uvicorn.run("main:app", host=host, port=port, reload=reload)
