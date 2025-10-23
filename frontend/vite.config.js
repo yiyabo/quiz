@@ -8,7 +8,7 @@ export default defineConfig({
     host: '0.0.0.0',  // 允许外网访问
     proxy: {
       '/api': {
-        target: 'http://localhost:6667',
+        target: 'http://119.147.24.196:6667',
         changeOrigin: true
       }
     }
