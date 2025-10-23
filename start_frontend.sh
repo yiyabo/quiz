@@ -3,7 +3,9 @@
 echo "🎨 启动前端服务..."
 echo ""
 
-cd /Users/apple/work/quiz/frontend
+# 获取脚本所在目录
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR/frontend"
 
 # 检查node_modules
 if [ ! -d "node_modules" ]; then
