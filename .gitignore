@@ -79,6 +79,9 @@ htmlcov/
 # 注意：答案文件已上传到仓库，因为需要在服务器上评分
 # 学生只能访问网站，看不到代码仓库，所以不会泄密
 
+# Large files (超过100MB的文件，使用压缩包代替)
+cci test/dataset/*.h5ad
+
 # Temporary files
 *.tmp
 *.temp
