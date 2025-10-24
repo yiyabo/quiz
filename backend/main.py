@@ -223,18 +223,7 @@ async def submit_prediction(
             detail=f"文件保存失败: {str(e)}"
         )
     
-    # 创建提交记录
-    submission = Submission(
-        user_id=current_user.id,
-        competition_id=competition_id,
-        filename=filename,
-        status="pending"
-    )
-    db.add(submission)
-    db.commit()
-    db.refresh(submission)
-    
-    # 根据竞赛选择评分函数
+    # 先评分，只有成功才保存提交记录
     try:
         answer_path = resolve_resource_path(competition.answer_path)
         if competition.name == "ppi":
@@ -242,33 +231,57 @@ async def submit_prediction(
         elif competition.name == "cci":
             result = evaluate_cci_submission(str(file_path), str(answer_path))
         else:
-            raise ValueError(f"未知的竞赛类型: {competition.name}")
+            # 删除临时文件
+            if file_path.exists():
+                file_path.unlink()
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"未知的竞赛类型: {competition.name}"
+            )
         
-        if result['status'] == 'success':
-            submission.status = 'success'
-            submission.accuracy = result['accuracy']
-            submission.precision = result['precision']
-            submission.recall = result['recall']
-            submission.f1_score = result['f1']
-            submission.final_score = result['final_score']
-            submission.tp = result['tp']
-            submission.tn = result['tn']
-            submission.fp = result['fp']
-            submission.fn = result['fn']
-        else:
-            submission.status = 'error'
-            submission.error_message = result.get('error_message', '未知错误')
+        # 检查评分结果
+        if result['status'] != 'success':
+            # 删除临时文件
+            if file_path.exists():
+                file_path.unlink()
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=result.get('error_message', '评分失败')
+            )
         
+        # 评分成功，创建提交记录
+        submission = Submission(
+            user_id=current_user.id,
+            competition_id=competition_id,
+            filename=filename,
+            status='success',
+            accuracy=result['accuracy'],
+            precision=result['precision'],
+            recall=result['recall'],
+            f1_score=result['f1'],
+            final_score=result['final_score'],
+            tp=result['tp'],
+            tn=result['tn'],
+            fp=result['fp'],
+            fn=result['fn']
+        )
+        db.add(submission)
         db.commit()
         db.refresh(submission)
         
+        return submission
+        
+    except HTTPException:
+        # 重新抛出 HTTP 异常
+        raise
     except Exception as e:
-        submission.status = 'error'
-        submission.error_message = f"评分失败: {str(e)}"
-        db.commit()
-        db.refresh(submission)
-    
-    return submission
+        # 删除临时文件
+        if file_path.exists():
+            file_path.unlink()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"评分失败: {str(e)}"
+        )
 
 
 @app.get("/api/submissions/me", response_model=List[SubmissionDetail])
