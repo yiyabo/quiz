@@ -3,8 +3,8 @@
     <div class="register-container">
       <div class="register-header">
         <el-icon :size="48" color="#409eff"><Trophy /></el-icon>
-        <h1>创建账号</h1>
-        <p>加入生物数据竞赛平台</p>
+        <h1>Create Account</h1>
+        <p>Join Bioinformatics Competition Platform</p>
       </div>
       
       <el-form
@@ -17,7 +17,7 @@
         <el-form-item prop="username">
           <el-input
             v-model="form.username"
-            placeholder="用户名（3-50个字符）"
+            placeholder="Username (3-50 characters)"
             size="large"
             :prefix-icon="User"
           />
@@ -26,7 +26,7 @@
         <el-form-item prop="email">
           <el-input
             v-model="form.email"
-            placeholder="邮箱"
+            placeholder="Email"
             size="large"
             :prefix-icon="Message"
           />
@@ -36,7 +36,7 @@
           <el-input
             v-model="form.password"
             type="password"
-            placeholder="密码（至少6个字符）"
+            placeholder="Password (at least 6 characters)"
             size="large"
             :prefix-icon="Lock"
             show-password
@@ -47,7 +47,7 @@
           <el-input
             v-model="form.confirmPassword"
             type="password"
-            placeholder="确认密码"
+            placeholder="Confirm Password"
             size="large"
             :prefix-icon="Lock"
             show-password
@@ -63,20 +63,20 @@
             @click="handleRegister"
             style="width: 100%"
           >
-            注册
+            Sign Up
           </el-button>
         </el-form-item>
       </el-form>
       
       <div class="register-footer">
-        <span>已有账号？</span>
-        <el-link type="primary" @click="router.push('/login')">立即登录</el-link>
+        <span>Already have an account?</span>
+        <el-link type="primary" @click="router.push('/login')">Login</el-link>
       </div>
       
       <div class="back-home">
         <el-link @click="router.push('/home')">
           <el-icon><ArrowLeft /></el-icon>
-          返回首页
+          Back to Home
         </el-link>
       </div>
     </div>
@@ -104,7 +104,7 @@ const form = ref({
 
 const validateConfirmPassword = (rule, value, callback) => {
   if (value !== form.value.password) {
-    callback(new Error('两次输入的密码不一致'))
+    callback(new Error('Passwords do not match'))
   } else {
     callback()
   }
@@ -112,19 +112,19 @@ const validateConfirmPassword = (rule, value, callback) => {
 
 const rules = {
   username: [
-    { required: true, message: '请输入用户名', trigger: 'blur' },
-    { min: 3, max: 50, message: '用户名长度在 3 到 50 个字符', trigger: 'blur' }
+    { required: true, message: 'Please enter username', trigger: 'blur' },
+    { min: 3, max: 50, message: 'Username must be 3-50 characters', trigger: 'blur' }
   ],
   email: [
-    { required: true, message: '请输入邮箱', trigger: 'blur' },
-    { type: 'email', message: '请输入有效的邮箱地址', trigger: 'blur' }
+    { required: true, message: 'Please enter email', trigger: 'blur' },
+    { type: 'email', message: 'Please enter a valid email address', trigger: 'blur' }
   ],
   password: [
-    { required: true, message: '请输入密码', trigger: 'blur' },
-    { min: 6, message: '密码至少需要6个字符', trigger: 'blur' }
+    { required: true, message: 'Please enter password', trigger: 'blur' },
+    { min: 6, message: 'Password must be at least 6 characters', trigger: 'blur' }
   ],
   confirmPassword: [
-    { required: true, message: '请确认密码', trigger: 'blur' },
+    { required: true, message: 'Please confirm password', trigger: 'blur' },
     { validator: validateConfirmPassword, trigger: 'blur' }
   ]
 }
@@ -140,10 +140,10 @@ const handleRegister = async () => {
     try {
       const { confirmPassword, ...registerData } = form.value
       await userStore.register(registerData)
-      ElMessage.success('注册成功！欢迎加入')
+      ElMessage.success('Registration successful! Welcome')
       router.push('/home')
     } catch (error) {
-      ElMessage.error(error.response?.data?.detail || '注册失败，请稍后重试')
+      ElMessage.error(error.response?.data?.detail || 'Registration failed, please try again')
     } finally {
       loading.value = false
     }

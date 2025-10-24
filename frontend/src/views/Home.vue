@@ -4,16 +4,16 @@
       <!-- Hero Section -->
       <div class="hero-section">
         <div class="hero-content">
-          <h1 class="hero-title">{{ currentCompetition?.title || '机器学习竞赛平台' }}</h1>
-          <p class="hero-subtitle">{{ currentCompetition?.description || '选择竞赛开始挑战' }}</p>
+          <h1 class="hero-title">{{ currentCompetition?.title || 'Machine Learning Competition Platform' }}</h1>
+          <p class="hero-subtitle">{{ currentCompetition?.description || 'Select a competition to start' }}</p>
           <div class="hero-actions">
             <el-button type="primary" size="large" @click="downloadDataset">
               <el-icon><Download /></el-icon>
-              下载数据集
+              Download Dataset
             </el-button>
             <el-button size="large" @click="router.push('/leaderboard')">
               <el-icon><TrophyBase /></el-icon>
-              查看排行榜
+              View Leaderboard
             </el-button>
           </div>
         </div>
@@ -28,7 +28,7 @@
                 <el-icon :size="40" color="#409eff"><User /></el-icon>
                 <div class="stat-info">
                   <div class="stat-value">{{ stats.total_users }}</div>
-                  <div class="stat-label">参赛用户</div>
+                  <div class="stat-label">Participants</div>
                 </div>
               </div>
             </el-card>
@@ -40,7 +40,7 @@
                 <el-icon :size="40" color="#67c23a"><Upload /></el-icon>
                 <div class="stat-info">
                   <div class="stat-value">{{ stats.total_submissions }}</div>
-                  <div class="stat-label">提交次数</div>
+                  <div class="stat-label">Submissions</div>
                 </div>
               </div>
             </el-card>
@@ -52,7 +52,7 @@
                 <el-icon :size="40" color="#e6a23c"><TrophyBase /></el-icon>
                 <div class="stat-info">
                   <div class="stat-value">{{ stats.best_score.toFixed(4) }}</div>
-                  <div class="stat-label">最高分数</div>
+                  <div class="stat-label">Best Score</div>
                 </div>
               </div>
             </el-card>
@@ -64,7 +64,7 @@
                 <el-icon :size="40" color="#f56c6c"><DataAnalysis /></el-icon>
                 <div class="stat-info">
                   <div class="stat-value">{{ stats.avg_score.toFixed(4) }}</div>
-                  <div class="stat-label">平均分数</div>
+                  <div class="stat-label">Average Score</div>
                 </div>
               </div>
             </el-card>
@@ -80,14 +80,14 @@
               <template #header>
                 <div class="card-header">
                   <el-icon><Document /></el-icon>
-                  <span>项目简介</span>
+                  <span>Project Overview</span>
                 </div>
               </template>
               <div class="info-content">
-                <p><strong>任务类型：</strong>{{ competitionDetails.taskType }}</p>
-                <p><strong>输入：</strong>{{ competitionDetails.input }}</p>
-                <p><strong>输出：</strong>{{ competitionDetails.output }}</p>
-                <p><strong>数据集规模：</strong></p>
+                <p><strong>Task Type:</strong> {{ competitionDetails.taskType }}</p>
+                <p><strong>Input:</strong> {{ competitionDetails.input }}</p>
+                <p><strong>Output:</strong> {{ competitionDetails.output }}</p>
+                <p><strong>Dataset Size:</strong></p>
                 <ul>
                   <li v-for="item in competitionDetails.dataset" :key="item.label">
                     {{ item.label }}：{{ item.value }}
@@ -102,16 +102,16 @@
               <template #header>
                 <div class="card-header">
                   <el-icon><Medal /></el-icon>
-                  <span>评分标准</span>
+                  <span>Scoring Criteria</span>
                 </div>
               </template>
               <div class="info-content">
-                <p>最终得分采用<strong>加权多指标</strong>评分：</p>
+                <p>Final score uses <strong>weighted multi-metric</strong> scoring:</p>
                 <ul>
-                  <li><strong>Accuracy</strong> (准确率)：权重 30%</li>
-                  <li><strong>Precision</strong> (精确率)：权重 20%</li>
-                  <li><strong>Recall</strong> (召回率)：权重 20%</li>
-                  <li><strong>F1-Score</strong>：权重 30%</li>
+                  <li><strong>Accuracy</strong>: Weight 30%</li>
+                  <li><strong>Precision</strong>: Weight 20%</li>
+                  <li><strong>Recall</strong>: Weight 20%</li>
+                  <li><strong>F1-Score</strong>: Weight 30%</li>
                 </ul>
                 <p class="formula">
                   <strong>Final Score = </strong>
@@ -129,26 +129,26 @@
           <template #header>
             <div class="card-header">
               <el-icon><Guide /></el-icon>
-              <span>快速开始</span>
+              <span>Quick Start</span>
             </div>
           </template>
           <el-steps :active="userStore.isLoggedIn ? 1 : 0" finish-status="success">
-            <el-step title="注册账号" description="创建你的竞赛账号" />
-            <el-step title="下载数据" description="获取训练和测试数据集" />
-            <el-step title="训练模型" description="使用训练集训练你的模型" />
-            <el-step title="提交结果" description="上传预测结果CSV文件" />
-            <el-step title="查看排名" description="在排行榜上查看你的成绩" />
+            <el-step title="Sign Up" description="Create your competition account" />
+            <el-step title="Download Data" description="Get training and test datasets" />
+            <el-step title="Train Model" description="Train your model with training set" />
+            <el-step title="Submit Results" description="Upload prediction results CSV file" />
+            <el-step title="View Ranking" description="Check your score on leaderboard" />
           </el-steps>
           
           <div class="action-buttons">
             <template v-if="!userStore.isLoggedIn">
               <el-button type="primary" size="large" @click="router.push('/register')">
-                立即注册参赛
+                Register Now
               </el-button>
             </template>
             <template v-else>
               <el-button type="primary" size="large" @click="router.push('/submit')">
-                提交预测结果
+                Submit Predictions
               </el-button>
             </template>
           </div>
@@ -190,35 +190,35 @@ const currentCompetition = computed(() => competitionStore.selectedCompetition)
 
 const competitionInfoMap = {
   ppi: {
-    taskType: '蛋白质对二分类',
-    input: '两个蛋白质的氨基酸序列特征',
-    output: 'prediction 列为 0 或 1，表示是否发生相互作用',
+    taskType: 'Protein Pair Binary Classification',
+    input: 'Amino acid sequence features of two proteins',
+    output: 'prediction column: 0 or 1, indicating interaction',
     dataset: [
-      { label: '训练集', value: '11,436 条样本' },
-      { label: '验证集', value: '2,287 条样本' },
-      { label: '测试集', value: '1,525 条样本' }
+      { label: 'Training Set', value: '11,436 samples' },
+      { label: 'Validation Set', value: '2,287 samples' },
+      { label: 'Test Set', value: '1,525 samples' }
     ]
   },
   cci: {
-    taskType: '细胞对二分类',
-    input: '空间转录组图中的细胞对 (source, target)',
-    output: 'label 列为 0 或 1，表示是否存在细胞间相互作用',
+    taskType: 'Cell Pair Binary Classification',
+    input: 'Cell pairs (source, target) in spatial transcriptomics',
+    output: 'label column: 0 or 1, indicating cell-cell interaction',
     dataset: [
-      { label: '训练集', value: '12,000 条边' },
-      { label: '验证集', value: '4,000 条边' },
-      { label: '测试集', value: '4,000 条边' }
+      { label: 'Training Set', value: '12,000 edges' },
+      { label: 'Validation Set', value: '4,000 edges' },
+      { label: 'Test Set', value: '4,000 edges' }
     ]
   }
 }
 
 const defaultCompetitionInfo = {
-  taskType: '二分类任务',
-  input: '根据所选竞赛的数据格式准备特征',
-  output: '输出 0 或 1 的预测结果',
+  taskType: 'Binary Classification Task',
+  input: 'Prepare features according to competition data format',
+  output: 'Output 0 or 1 prediction results',
   dataset: [
-    { label: '训练集', value: '请查看竞赛说明' },
-    { label: '验证集', value: '请查看竞赛说明' },
-    { label: '测试集', value: '请查看竞赛说明' }
+    { label: 'Training Set', value: 'See competition description' },
+    { label: 'Validation Set', value: 'See competition description' },
+    { label: 'Test Set', value: 'See competition description' }
   ]
 }
 
@@ -229,12 +229,12 @@ const competitionDetails = computed(() => {
 
 const downloadDataset = () => {
   if (!competitionStore.selectedCompetitionId) {
-    ElMessage.warning('请先选择竞赛')
+    ElMessage.warning('Please select a competition first')
     return
   }
   const url = downloadAPI.getDatasetUrl(competitionStore.selectedCompetitionId)
   window.open(url, '_blank')
-  ElMessage.success(`正在下载 ${currentCompetition.value?.title} 数据集`)
+  ElMessage.success(`Downloading ${currentCompetition.value?.title} dataset`)
 }
 
 onMounted(() => {

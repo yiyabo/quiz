@@ -3,8 +3,8 @@
     <div class="login-container">
       <div class="login-header">
         <el-icon :size="48" color="#409eff"><Trophy /></el-icon>
-        <h1>欢迎回来</h1>
-        <p>登录到生物数据竞赛平台</p>
+        <h1>Welcome Back</h1>
+        <p>Login to Bioinformatics Competition Platform</p>
       </div>
       
       <el-form
@@ -17,7 +17,7 @@
         <el-form-item prop="username">
           <el-input
             v-model="form.username"
-            placeholder="用户名"
+            placeholder="Username"
             size="large"
             :prefix-icon="User"
           />
@@ -27,7 +27,7 @@
           <el-input
             v-model="form.password"
             type="password"
-            placeholder="密码"
+            placeholder="Password"
             size="large"
             :prefix-icon="Lock"
             show-password
@@ -43,20 +43,20 @@
             @click="handleLogin"
             style="width: 100%"
           >
-            登录
+            Login
           </el-button>
         </el-form-item>
       </el-form>
       
       <div class="login-footer">
-        <span>还没有账号？</span>
-        <el-link type="primary" @click="router.push('/register')">立即注册</el-link>
+        <span>Don't have an account?</span>
+        <el-link type="primary" @click="router.push('/register')">Sign Up</el-link>
       </div>
       
       <div class="back-home">
         <el-link @click="router.push('/home')">
           <el-icon><ArrowLeft /></el-icon>
-          返回首页
+          Back to Home
         </el-link>
       </div>
     </div>
@@ -82,10 +82,10 @@ const form = ref({
 
 const rules = {
   username: [
-    { required: true, message: '请输入用户名', trigger: 'blur' }
+    { required: true, message: 'Please enter username', trigger: 'blur' }
   ],
   password: [
-    { required: true, message: '请输入密码', trigger: 'blur' }
+    { required: true, message: 'Please enter password', trigger: 'blur' }
   ]
 }
 
@@ -99,10 +99,10 @@ const handleLogin = async () => {
     
     try {
       await userStore.login(form.value)
-      ElMessage.success('登录成功！')
+      ElMessage.success('Login successful!')
       router.push('/home')
     } catch (error) {
-      ElMessage.error(error.response?.data?.detail || '登录失败，请检查用户名和密码')
+      ElMessage.error(error.response?.data?.detail || 'Login failed, please check your credentials')
     } finally {
       loading.value = false
     }

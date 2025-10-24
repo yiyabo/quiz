@@ -6,14 +6,14 @@
         <div class="header-content">
           <div class="logo">
             <el-icon :size="28"><Trophy /></el-icon>
-            <span class="title">生物数据竞赛平台</span>
+            <span class="title">Bioinformatics Competition</span>
           </div>
           
           <div class="nav-section">
             <!-- 竞赛选择器 -->
             <el-select
               v-model="competitionStore.selectedCompetitionId"
-              placeholder="选择竞赛"
+              placeholder="Select Competition"
               class="competition-selector"
               @change="handleCompetitionChange"
             >
@@ -36,19 +36,19 @@
             >
               <el-menu-item index="/home">
                 <el-icon><HomeFilled /></el-icon>
-                <span>首页</span>
+                <span>Home</span>
               </el-menu-item>
               <el-menu-item index="/leaderboard">
                 <el-icon><TrophyBase /></el-icon>
-                <span>排行榜</span>
+                <span>Leaderboard</span>
               </el-menu-item>
               <el-menu-item index="/submit" v-if="userStore.isLoggedIn">
                 <el-icon><Upload /></el-icon>
-                <span>提交</span>
+                <span>Submit</span>
               </el-menu-item>
               <el-menu-item index="/profile" v-if="userStore.isLoggedIn">
                 <el-icon><User /></el-icon>
-                <span>我的</span>
+                <span>Profile</span>
               </el-menu-item>
             </el-menu>
           </div>
@@ -65,19 +65,19 @@
                   <el-dropdown-menu>
                     <el-dropdown-item command="profile">
                       <el-icon><User /></el-icon>
-                      个人中心
+                      Profile
                     </el-dropdown-item>
                     <el-dropdown-item command="logout" divided>
                       <el-icon><SwitchButton /></el-icon>
-                      退出登录
+                      Logout
                     </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
             </template>
             <template v-else>
-              <el-button @click="router.push('/login')">登录</el-button>
-              <el-button type="primary" @click="router.push('/register')">注册</el-button>
+              <el-button @click="router.push('/login')">Login</el-button>
+              <el-button type="primary" @click="router.push('/register')">Sign Up</el-button>
             </template>
           </div>
         </div>
@@ -91,13 +91,13 @@
       <!-- 页脚 -->
       <el-footer class="footer">
         <div class="footer-content">
-          <p>© 2024 生物数据竞赛平台</p>
+          <p>© 2024 Bioinformatics Competition Platform</p>
           <p class="footer-links">
             <a href="https://github.com" target="_blank">GitHub</a>
             <span class="separator">|</span>
-            <a href="#" @click.prevent>帮助文档</a>
+            <a href="#" @click.prevent>Documentation</a>
             <span class="separator">|</span>
-            <a href="#" @click.prevent>联系我们</a>
+            <a href="#" @click.prevent>Contact Us</a>
           </p>
         </div>
       </el-footer>
@@ -128,7 +128,7 @@ const handleMenuSelect = (index) => {
 }
 
 const handleCompetitionChange = () => {
-  ElMessage.success(`已切换到：${competitionStore.selectedCompetition?.title}`)
+  ElMessage.success(`Switched to: ${competitionStore.selectedCompetition?.title}`)
   // 如果在排行榜页面，刷新排行榜
   if (route.path === '/leaderboard') {
     window.location.reload()
@@ -138,7 +138,7 @@ const handleCompetitionChange = () => {
 const handleCommand = (command) => {
   if (command === 'logout') {
     userStore.logout()
-    ElMessage.success('已退出登录')
+    ElMessage.success('Logged out successfully')
     router.push('/home')
   } else if (command === 'profile') {
     router.push('/profile')
