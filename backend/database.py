@@ -119,8 +119,8 @@ def init_db():
                 if name == "ppi":
                     competition = Competition(
                         name="ppi",
-                        title="蛋白质相互作用预测",
-                        description="预测两个蛋白质是否会发生相互作用（Protein-Protein Interaction, PPI）",
+                        title="Protein-Protein Interaction Prediction",
+                        description="Predict whether two proteins will interact (Protein-Protein Interaction, PPI)",
                         dataset_path=paths["dataset_path"],
                         answer_path=paths["answer_path"],
                         is_active=1
@@ -128,8 +128,8 @@ def init_db():
                 elif name == "cci":
                     competition = Competition(
                         name="cci",
-                        title="细胞间相互作用预测",
-                        description="根据空间转录组数据，预测是否有细胞间相互作用（Cell-Cell Interaction, CCI）",
+                        title="Cell-Cell Interaction Prediction",
+                        description="Predict cell-cell interactions based on spatial transcriptomics data (Cell-Cell Interaction, CCI)",
                         dataset_path=paths["dataset_path"],
                         answer_path=paths["answer_path"],
                         is_active=1

@@ -1,5 +1,5 @@
 """
-CCI竞赛评分服务 - 细胞间相互作用预测
+CCI Competition Scoring Service - Cell-Cell Interaction Prediction
 """
 import csv
 import os

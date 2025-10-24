@@ -60,8 +60,8 @@ async def lifespan(app: FastAPI):
 
 # 创建FastAPI应用
 app = FastAPI(
-    title="蛋白质相互作用预测竞赛平台",
-    description="迷你Kaggle竞赛平台",
+    title="Bioinformatics Competition Platform",
+    description="Mini Kaggle Competition Platform",
     version="1.0.0",
     lifespan=lifespan
 )
@@ -82,7 +82,7 @@ app.add_middleware(
 @app.get("/")
 def root():
     return {
-        "message": "蛋白质相互作用预测竞赛平台 API",
+        "message": "Bioinformatics Competition Platform API",
         "version": "1.0.0",
         "status": "running"
     }
