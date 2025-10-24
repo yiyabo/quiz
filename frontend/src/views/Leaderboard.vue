@@ -6,7 +6,7 @@
           <div class="card-header">
             <div style="display: flex; align-items: center; gap: 12px">
               <el-icon :size="24"><TrophyBase /></el-icon>
-              <span class="title">排行榜</span>
+              <span class="title">Leaderboard</span>
               <el-tag v-if="currentCompetition" type="primary" size="large">
                 {{ currentCompetition.title }}
               </el-tag>
@@ -25,9 +25,9 @@
         </div>
         
         <div v-else-if="leaderboard.length === 0" class="empty-section">
-          <el-empty description="暂无数据">
+          <el-empty description="No data yet">
             <el-button type="primary" @click="router.push('/submit')">
-              立即提交
+              Submit Now
             </el-button>
           </el-empty>
         </div>
@@ -46,7 +46,7 @@
                   <div class="score">{{ leaderboard[1].best_score.toFixed(4) }}</div>
                   <div class="stats">
                     <span>F1: {{ leaderboard[1].best_f1_score.toFixed(4) }}</span>
-                    <span>提交: {{ leaderboard[1].submission_count }}次</span>
+                    <span>Submissions: {{ leaderboard[1].submission_count }}</span>
                   </div>
                 </div>
               </el-col>
@@ -61,7 +61,7 @@
                   <div class="score champion">{{ leaderboard[0].best_score.toFixed(4) }}</div>
                   <div class="stats">
                     <span>F1: {{ leaderboard[0].best_f1_score.toFixed(4) }}</span>
-                    <span>提交: {{ leaderboard[0].submission_count }}次</span>
+                    <span>Submissions: {{ leaderboard[0].submission_count }}</span>
                   </div>
                 </div>
               </el-col>
@@ -76,7 +76,7 @@
                   <div class="score">{{ leaderboard[2].best_score.toFixed(4) }}</div>
                   <div class="stats">
                     <span>F1: {{ leaderboard[2].best_f1_score.toFixed(4) }}</span>
-                    <span>提交: {{ leaderboard[2].submission_count }}次</span>
+                    <span>Submissions: {{ leaderboard[2].submission_count }}</span>
                   </div>
                 </div>
               </el-col>
@@ -90,7 +90,7 @@
               stripe
               :row-class-name="getRowClassName"
             >
-              <el-table-column prop="rank" label="排名" width="80" align="center">
+              <el-table-column prop="rank" label="Rank" width="80" align="center">
                 <template #default="scope">
                   <span :class="getRankClass(scope.row.rank)">
                     {{ scope.row.rank }}
@@ -98,37 +98,37 @@
                 </template>
               </el-table-column>
               
-              <el-table-column prop="username" label="用户名" min-width="150">
+              <el-table-column prop="username" label="Username" min-width="150">
                 <template #default="scope">
                   <div class="user-cell">
                     <el-avatar :size="32">{{ scope.row.username.charAt(0).toUpperCase() }}</el-avatar>
                     <span>{{ scope.row.username }}</span>
-                    <el-tag v-if="isCurrentUser(scope.row.user_id)" type="success" size="small">你</el-tag>
+                    <el-tag v-if="isCurrentUser(scope.row.user_id)" type="success" size="small">You</el-tag>
                   </div>
                 </template>
               </el-table-column>
               
-              <el-table-column prop="best_score" label="最佳得分" width="140" align="center" sortable>
+              <el-table-column prop="best_score" label="Best Score" width="140" align="center" sortable>
                 <template #default="scope">
                   <span class="score-cell">{{ scope.row.best_score.toFixed(4) }}</span>
                 </template>
               </el-table-column>
               
-              <el-table-column prop="best_accuracy" label="准确率" width="120" align="center">
+              <el-table-column prop="best_accuracy" label="Accuracy" width="120" align="center">
                 <template #default="scope">
                   {{ scope.row.best_accuracy.toFixed(4) }}
                 </template>
               </el-table-column>
               
-              <el-table-column prop="best_f1_score" label="F1分数" width="120" align="center">
+              <el-table-column prop="best_f1_score" label="F1 Score" width="120" align="center">
                 <template #default="scope">
                   {{ scope.row.best_f1_score.toFixed(4) }}
                 </template>
               </el-table-column>
               
-              <el-table-column prop="submission_count" label="提交次数" width="120" align="center" />
+              <el-table-column prop="submission_count" label="Submissions" width="120" align="center" />
               
-              <el-table-column prop="last_submission" label="最后提交" width="180">
+              <el-table-column prop="last_submission" label="Last Submission" width="180">
                 <template #default="scope">
                   {{ formatDateTime(scope.row.last_submission) }}
                 </template>
@@ -164,7 +164,7 @@ const loadLeaderboard = async () => {
   try {
     leaderboard.value = await leaderboardAPI.getLeaderboard(competitionStore.selectedCompetitionId)
   } catch (error) {
-    ElMessage.error('加载排行榜失败')
+    ElMessage.error('Failed to load leaderboard')
     console.error('Failed to load leaderboard:', error)
   } finally {
     loading.value = false

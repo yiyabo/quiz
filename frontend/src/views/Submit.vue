@@ -6,7 +6,7 @@
           <div class="card-header">
             <div>
               <el-icon :size="24"><Upload /></el-icon>
-              <span class="title">提交预测结果</span>
+              <span class="title">Submit Predictions</span>
             </div>
             <el-tag v-if="currentCompetition" type="primary" size="large">
               {{ currentCompetition.title }}
@@ -15,23 +15,23 @@
         </template>
         
         <el-alert
-          title="提交说明"
+          title="Submission Instructions"
           type="info"
           :closable="false"
           style="margin-bottom: 24px"
         >
           <ul class="submit-instructions">
-            <li>请上传 CSV 格式的预测结果文件</li>
+            <li>Please upload prediction results in CSV format</li>
             <li>
-              文件必须包含以下列：
+              File must contain the following columns:
               <span class="columns">
                 <template v-for="(col, index) in submissionGuide.columns" :key="col">
                   <code>{{ col }}</code><span v-if="index < submissionGuide.columns.length - 1">, </span>
                 </template>
               </span>
             </li>
-            <li><code>{{ submissionGuide.predictionColumn }}</code> 列的值必须是 0 或 1</li>
-            <li>必须包含测试集的所有 {{ submissionGuide.sampleCount }} 个样本</li>
+            <li><code>{{ submissionGuide.predictionColumn }}</code> column values must be 0 or 1</li>
+            <li>Must include all {{ submissionGuide.sampleCount }} test samples</li>
             <li>{{ submissionGuide.sampleHint }}</li>
           </ul>
         </el-alert>
@@ -49,11 +49,11 @@
           >
             <el-icon class="el-icon--upload"><upload-filled /></el-icon>
             <div class="el-upload__text">
-              将CSV文件拖到此处，或<em>点击上传</em>
+              Drop CSV file here or <em>click to upload</em>
             </div>
             <template #tip>
               <div class="el-upload__tip">
-                只能上传CSV文件
+                Only CSV files are allowed
               </div>
             </template>
           </el-upload>
@@ -68,11 +68,11 @@
             @click="handleSubmit"
           >
             <el-icon><Check /></el-icon>
-            提交评分
+            Submit for Scoring
           </el-button>
           <el-button size="large" @click="resetForm">
             <el-icon><Refresh /></el-icon>
-            重置
+            Reset
           </el-button>
         </div>
       </el-card>
@@ -81,28 +81,28 @@
       <el-card class="recent-submissions" v-if="recentSubmissions.length > 0">
         <template #header>
           <div class="card-header">
-            <span class="title">最近提交</span>
+            <span class="title">Recent Submissions</span>
           </div>
         </template>
         
         <el-table :data="recentSubmissions" style="width: 100%">
-          <el-table-column prop="submitted_at" label="提交时间" width="180">
+          <el-table-column prop="submitted_at" label="Submitted At" width="180">
             <template #default="scope">
               {{ formatDateTime(scope.row.submitted_at) }}
             </template>
           </el-table-column>
           
-          <el-table-column prop="filename" label="文件名" min-width="200" />
+          <el-table-column prop="filename" label="Filename" min-width="200" />
           
-          <el-table-column prop="status" label="状态" width="100">
+          <el-table-column prop="status" label="Status" width="100">
             <template #default="scope">
-              <el-tag v-if="scope.row.status === 'success'" type="success">成功</el-tag>
-              <el-tag v-else-if="scope.row.status === 'error'" type="danger">失败</el-tag>
-              <el-tag v-else type="info">处理中</el-tag>
+              <el-tag v-if="scope.row.status === 'success'" type="success">Success</el-tag>
+              <el-tag v-else-if="scope.row.status === 'error'" type="danger">Failed</el-tag>
+              <el-tag v-else type="info">Processing</el-tag>
             </template>
           </el-table-column>
           
-          <el-table-column prop="final_score" label="得分" width="120">
+          <el-table-column prop="final_score" label="Score" width="120">
             <template #default="scope">
               <span v-if="scope.row.final_score !== null" class="score">
                 {{ scope.row.final_score.toFixed(4) }}
@@ -111,14 +111,14 @@
             </template>
           </el-table-column>
           
-          <el-table-column label="操作" width="120">
+          <el-table-column label="Actions" width="120">
             <template #default="scope">
               <el-button
                 type="primary"
                 link
                 @click="viewDetail(scope.row)"
               >
-                查看详情
+                View Details
               </el-button>
             </template>
           </el-table-column>
@@ -128,69 +128,69 @@
       <!-- 详情对话框 -->
       <el-dialog
         v-model="detailDialogVisible"
-        title="提交详情"
+        title="Submission Details"
         width="600px"
       >
         <div v-if="selectedSubmission" class="submission-detail">
           <el-descriptions :column="1" border>
-            <el-descriptions-item label="文件名">
+            <el-descriptions-item label="Filename">
               {{ selectedSubmission.filename }}
             </el-descriptions-item>
-            <el-descriptions-item label="提交时间">
+            <el-descriptions-item label="Submitted At">
               {{ formatDateTime(selectedSubmission.submitted_at) }}
             </el-descriptions-item>
-            <el-descriptions-item label="状态">
-              <el-tag v-if="selectedSubmission.status === 'success'" type="success">成功</el-tag>
-              <el-tag v-else-if="selectedSubmission.status === 'error'" type="danger">失败</el-tag>
-              <el-tag v-else type="info">处理中</el-tag>
+            <el-descriptions-item label="Status">
+              <el-tag v-if="selectedSubmission.status === 'success'" type="success">Success</el-tag>
+              <el-tag v-else-if="selectedSubmission.status === 'error'" type="danger">Failed</el-tag>
+              <el-tag v-else type="info">Processing</el-tag>
             </el-descriptions-item>
           </el-descriptions>
           
           <div v-if="selectedSubmission.status === 'success'" class="metrics">
-            <h3>评分指标</h3>
+            <h3>Scoring Metrics</h3>
             <el-row :gutter="16">
               <el-col :span="12">
                 <div class="metric-item">
-                  <div class="metric-label">准确率 (Accuracy)</div>
+                  <div class="metric-label">Accuracy</div>
                   <div class="metric-value">{{ selectedSubmission.accuracy?.toFixed(4) }}</div>
                 </div>
               </el-col>
               <el-col :span="12">
                 <div class="metric-item">
-                  <div class="metric-label">精确率 (Precision)</div>
+                  <div class="metric-label">Precision</div>
                   <div class="metric-value">{{ selectedSubmission.precision?.toFixed(4) }}</div>
                 </div>
               </el-col>
               <el-col :span="12">
                 <div class="metric-item">
-                  <div class="metric-label">召回率 (Recall)</div>
+                  <div class="metric-label">Recall</div>
                   <div class="metric-value">{{ selectedSubmission.recall?.toFixed(4) }}</div>
                 </div>
               </el-col>
               <el-col :span="12">
                 <div class="metric-item">
-                  <div class="metric-label">F1分数 (F1-Score)</div>
+                  <div class="metric-label">F1-Score</div>
                   <div class="metric-value">{{ selectedSubmission.f1_score?.toFixed(4) }}</div>
                 </div>
               </el-col>
             </el-row>
             
             <div class="final-score">
-              <div class="final-score-label">最终得分</div>
+              <div class="final-score-label">Final Score</div>
               <div class="final-score-value">{{ selectedSubmission.final_score?.toFixed(4) }}</div>
             </div>
             
-            <h3>混淆矩阵</h3>
+            <h3>Confusion Matrix</h3>
             <el-table :data="confusionMatrixData" border style="width: 100%">
               <el-table-column prop="label" label="" width="150" />
-              <el-table-column prop="tp" label="预测为正" align="center" />
-              <el-table-column prop="fp" label="预测为负" align="center" />
+              <el-table-column prop="tp" label="Predicted Positive" align="center" />
+              <el-table-column prop="fp" label="Predicted Negative" align="center" />
             </el-table>
           </div>
           
           <div v-else-if="selectedSubmission.status === 'error'" class="error-message">
             <el-alert
-              title="评分失败"
+              title="Scoring Failed"
               type="error"
               :description="selectedSubmission.error_message"
               :closable="false"
@@ -224,12 +224,12 @@ const confusionMatrixData = computed(() => {
   if (!selectedSubmission.value) return []
   return [
     {
-      label: '实际为正',
+      label: 'Actual Positive',
       tp: selectedSubmission.value.tp,
       fp: selectedSubmission.value.fn
     },
     {
-      label: '实际为负',
+      label: 'Actual Negative',
       tp: selectedSubmission.value.fp,
       fp: selectedSubmission.value.tn
     }
@@ -241,7 +241,7 @@ const handleFileChange = (file) => {
 }
 
 const handleExceed = () => {
-  ElMessage.warning('一次只能上传一个文件')
+  ElMessage.warning('Only one file can be uploaded at a time')
 }
 
 const handleRemove = () => {
@@ -255,12 +255,12 @@ const resetForm = () => {
 
 const handleSubmit = async () => {
   if (!selectedFile.value) {
-    ElMessage.warning('请先选择文件')
+    ElMessage.warning('Please select a file first')
     return
   }
   
   if (!competitionStore.selectedCompetitionId) {
-    ElMessage.warning('请先选择竞赛')
+    ElMessage.warning('Please select a competition first')
     return
   }
   
@@ -270,7 +270,7 @@ const handleSubmit = async () => {
     const result = await submissionAPI.submit(competitionStore.selectedCompetitionId, selectedFile.value)
     
     if (result.status === 'success') {
-      ElMessage.success('提交成功！评分已完成')
+      ElMessage.success('Submission successful! Scoring completed')
       resetForm()
       loadRecentSubmissions()
       
@@ -278,10 +278,10 @@ const handleSubmit = async () => {
       selectedSubmission.value = result
       detailDialogVisible.value = true
     } else {
-      ElMessage.error(result.error_message || '提交失败')
+      ElMessage.error(result.error_message || 'Submission failed')
     }
   } catch (error) {
-    ElMessage.error(error.response?.data?.detail || '提交失败，请稍后重试')
+    ElMessage.error(error.response?.data?.detail || 'Submission failed, please try again')
   } finally {
     submitting.value = false
   }
@@ -317,21 +317,21 @@ const submissionGuideMap = {
     columns: ['protein_A', 'protein_B', 'prediction'],
     predictionColumn: 'prediction',
     sampleCount: 1525,
-    sampleHint: '参考 kaggle_dataset/sample_submission.csv 文件格式'
+    sampleHint: 'Refer to kaggle_dataset/sample_submission.csv for format'
   },
   cci: {
     columns: ['source', 'target', 'label'],
     predictionColumn: 'label',
     sampleCount: 4000,
-    sampleHint: '请保持 test_edges.csv 的列顺序，label 列填写预测结果'
+    sampleHint: 'Keep test_edges.csv column order, fill label column with predictions'
   }
 }
 
 const defaultSubmissionGuide = {
   columns: ['id', 'feature_1', 'prediction'],
   predictionColumn: 'prediction',
-  sampleCount: '全部测试样本',
-  sampleHint: '请按照竞赛说明准备提交文件'
+  sampleCount: 'All test samples',
+  sampleHint: 'Prepare submission file according to competition instructions'
 }
 
 const submissionGuide = computed(() => {

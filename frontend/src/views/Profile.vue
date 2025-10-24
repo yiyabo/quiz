@@ -10,7 +10,7 @@
               <h2>{{ userStore.user?.username }}</h2>
               <p class="email">{{ userStore.user?.email }}</p>
               <p class="join-date">
-                加入时间: {{ formatDate(userStore.user?.created_at) }}
+                Joined: {{ formatDate(userStore.user?.created_at) }}
               </p>
             </div>
           </el-card>
@@ -19,25 +19,25 @@
             <template #header>
               <div class="card-header">
                 <el-icon><DataAnalysis /></el-icon>
-                <span>我的统计</span>
+                <span>My Statistics</span>
               </div>
             </template>
             <div class="stat-item">
-              <div class="stat-label">提交次数</div>
+              <div class="stat-label">Total Submissions</div>
               <div class="stat-value">{{ myStats.totalSubmissions }}</div>
             </div>
             <div class="stat-item">
-              <div class="stat-label">成功次数</div>
+              <div class="stat-label">Successful</div>
               <div class="stat-value success">{{ myStats.successSubmissions }}</div>
             </div>
             <div class="stat-item">
-              <div class="stat-label">最佳得分</div>
+              <div class="stat-label">Best Score</div>
               <div class="stat-value best">
                 {{ myStats.bestScore !== null ? myStats.bestScore.toFixed(4) : '-' }}
               </div>
             </div>
             <div class="stat-item" v-if="myStats.rank">
-              <div class="stat-label">当前排名</div>
+              <div class="stat-label">Current Rank</div>
               <div class="stat-value rank">
                 #{{ myStats.rank }}
               </div>
@@ -52,7 +52,7 @@
               <div class="card-header">
                 <div>
                   <el-icon><Document /></el-icon>
-                  <span>提交历史</span>
+                  <span>Submission History</span>
                 </div>
                 <el-button
                   :icon="Refresh"
@@ -69,9 +69,9 @@
             </div>
             
             <div v-else-if="submissions.length === 0" class="empty-section">
-              <el-empty description="还没有提交记录">
+              <el-empty description="No submissions yet">
                 <el-button type="primary" @click="router.push('/submit')">
-                  立即提交
+                  Submit Now
                 </el-button>
               </el-empty>
             </div>
@@ -79,7 +79,7 @@
             <div v-else>
               <!-- 得分趋势图 -->
               <div class="score-chart" v-if="chartData.length > 0">
-                <h3>得分趋势</h3>
+                <h3>Score Trend</h3>
                 <div class="chart-container">
                   <div
                     v-for="(item, index) in chartData"
@@ -93,7 +93,7 @@
                 </div>
               </div>
               
-              <!-- 提交列表 -->
+              <!-- Submission list -->
               <div class="submissions-list">
                 <el-timeline>
                   <el-timeline-item
@@ -117,17 +117,17 @@
                             type="success"
                             effect="dark"
                           >
-                            最佳
+                            Best
                           </el-tag>
                         </div>
                         
                         <div v-if="submission.status === 'success'" class="submission-metrics">
                           <div class="metric">
-                            <span class="metric-label">得分:</span>
+                            <span class="metric-label">Score:</span>
                             <span class="metric-value">{{ submission.final_score.toFixed(4) }}</span>
                           </div>
                           <div class="metric">
-                            <span class="metric-label">准确率:</span>
+                            <span class="metric-label">Accuracy:</span>
                             <span class="metric-value">{{ submission.accuracy.toFixed(4) }}</span>
                           </div>
                           <div class="metric">
@@ -145,7 +145,7 @@
                         </div>
                         
                         <div v-else class="submission-pending">
-                          <el-tag type="info">处理中...</el-tag>
+                          <el-tag type="info">Processing...</el-tag>
                         </div>
                       </div>
                     </el-card>
@@ -219,7 +219,7 @@ const loadSubmissions = async () => {
   try {
     submissions.value = await submissionAPI.getMySubmissions(50)
   } catch (error) {
-    ElMessage.error('加载提交历史失败')
+    ElMessage.error('Failed to load submission history')
     console.error('Failed to load submissions:', error)
   } finally {
     loading.value = false
