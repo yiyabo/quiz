@@ -334,60 +334,91 @@ def get_leaderboard(
 ):
     """获取排行榜（可按竞赛筛选）"""
     
-    # 构建查询
-    query = db.query(
+    # 使用子查询找出每个用户的最佳提交
+    # 先找出每个用户的最高分
+    best_scores_subquery = db.query(
         Submission.user_id,
-        func.max(Submission.final_score).label('best_score'),
-        func.count(Submission.id).label('submission_count'),
-        func.max(Submission.submitted_at).label('last_submission')
+        func.max(Submission.final_score).label('best_score')
     ).filter(
         Submission.status == 'success'
     )
     
     # 如果指定了竞赛ID，则筛选
     if competition_id:
-        query = query.filter(Submission.competition_id == competition_id)
+        best_scores_subquery = best_scores_subquery.filter(Submission.competition_id == competition_id)
     
-    subquery = query.group_by(Submission.user_id).subquery()
+    best_scores_subquery = best_scores_subquery.group_by(Submission.user_id).subquery()
     
-    # 获取完整信息
+    # 找出最佳提交的完整信息（包括 accuracy, precision, recall, f1）
+    best_submissions_query = db.query(
+        Submission.user_id,
+        Submission.final_score,
+        Submission.accuracy,
+        Submission.precision,
+        Submission.recall,
+        Submission.f1_score,
+        Submission.submitted_at
+    ).join(
+        best_scores_subquery,
+        (Submission.user_id == best_scores_subquery.c.user_id) &
+        (Submission.final_score == best_scores_subquery.c.best_score)
+    ).filter(
+        Submission.status == 'success'
+    )
+    
+    if competition_id:
+        best_submissions_query = best_submissions_query.filter(Submission.competition_id == competition_id)
+    
+    # 对于有多个相同最高分的情况，取最新的一个
+    best_submissions_subquery = best_submissions_query.distinct(Submission.user_id).subquery()
+    
+    # 统计每个用户的提交次数（只统计当前竞赛）
+    submission_counts_query = db.query(
+        Submission.user_id,
+        func.count(Submission.id).label('submission_count'),
+        func.max(Submission.submitted_at).label('last_submission')
+    ).filter(
+        Submission.status == 'success'
+    )
+    
+    if competition_id:
+        submission_counts_query = submission_counts_query.filter(Submission.competition_id == competition_id)
+    
+    submission_counts_subquery = submission_counts_query.group_by(Submission.user_id).subquery()
+    
+    # 组合所有信息
     results = db.query(
         User.id,
         User.username,
-        subquery.c.best_score,
-        subquery.c.submission_count,
-        subquery.c.last_submission
+        best_submissions_subquery.c.final_score,
+        best_submissions_subquery.c.accuracy,
+        best_submissions_subquery.c.precision,
+        best_submissions_subquery.c.recall,
+        best_submissions_subquery.c.f1_score,
+        submission_counts_subquery.c.submission_count,
+        submission_counts_subquery.c.last_submission
     ).join(
-        subquery, User.id == subquery.c.user_id
+        best_submissions_subquery, User.id == best_submissions_subquery.c.user_id
+    ).join(
+        submission_counts_subquery, User.id == submission_counts_subquery.c.user_id
     ).order_by(
-        desc(subquery.c.best_score)
+        desc(best_submissions_subquery.c.final_score)
     ).limit(limit).all()
     
     # 构建排行榜
     leaderboard = []
-    for rank, (user_id, username, best_score, submission_count, last_submission) in enumerate(results, start=1):
-        # 获取该用户最佳提交的详细信息
-        best_submission_query = db.query(Submission).filter(
-            Submission.user_id == user_id,
-            Submission.final_score == best_score,
-            Submission.status == 'success'
-        )
-        
-        # 如果指定了竞赛ID，则筛选
-        if competition_id:
-            best_submission_query = best_submission_query.filter(Submission.competition_id == competition_id)
-        
-        best_submission = best_submission_query.first()
-        
+    for rank, row in enumerate(results, start=1):
         leaderboard.append(LeaderboardEntry(
             rank=rank,
-            user_id=user_id,
-            username=username,
-            best_score=best_score,
-            best_accuracy=best_submission.accuracy if best_submission else 0,
-            best_f1_score=best_submission.f1_score if best_submission else 0,
-            submission_count=submission_count,
-            last_submission=last_submission
+            user_id=row[0],
+            username=row[1],
+            best_score=row[2],
+            best_accuracy=row[3],
+            best_precision=row[4],
+            best_recall=row[5],
+            best_f1_score=row[6],
+            submission_count=row[7],
+            last_submission=row[8]
         ))
     
     return leaderboard

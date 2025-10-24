@@ -114,19 +114,31 @@
                 </template>
               </el-table-column>
               
-              <el-table-column prop="best_accuracy" label="Accuracy" width="120" align="center">
+              <el-table-column prop="best_accuracy" label="Accuracy" width="110" align="center">
                 <template #default="scope">
                   {{ scope.row.best_accuracy.toFixed(4) }}
                 </template>
               </el-table-column>
               
-              <el-table-column prop="best_f1_score" label="F1 Score" width="120" align="center">
+              <el-table-column prop="best_precision" label="Precision" width="110" align="center">
+                <template #default="scope">
+                  {{ scope.row.best_precision.toFixed(4) }}
+                </template>
+              </el-table-column>
+              
+              <el-table-column prop="best_recall" label="Recall" width="110" align="center">
+                <template #default="scope">
+                  {{ scope.row.best_recall.toFixed(4) }}
+                </template>
+              </el-table-column>
+              
+              <el-table-column prop="best_f1_score" label="F1 Score" width="110" align="center">
                 <template #default="scope">
                   {{ scope.row.best_f1_score.toFixed(4) }}
                 </template>
               </el-table-column>
               
-              <el-table-column prop="submission_count" label="Submissions" width="120" align="center" />
+              <el-table-column prop="submission_count" label="Submissions" width="110" align="center" />
               
               <el-table-column prop="last_submission" label="Last Submission" width="180">
                 <template #default="scope">

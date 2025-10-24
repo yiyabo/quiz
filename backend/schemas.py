@@ -80,6 +80,8 @@ class LeaderboardEntry(BaseModel):
     username: str
     best_score: float
     best_accuracy: float
+    best_precision: float
+    best_recall: float
     best_f1_score: float
     submission_count: int
     last_submission: datetime
