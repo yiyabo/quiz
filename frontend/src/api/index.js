@@ -71,7 +71,10 @@ export const leaderboardAPI = {
 
 // 统计API
 export const statisticsAPI = {
-  getStatistics: () => api.get('/statistics')
+  getStatistics: (competitionId = null) => {
+    const params = competitionId ? { competition_id: competitionId } : {}
+    return api.get('/statistics', { params })
+  }
 }
 
 // 数据下载API

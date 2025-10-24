@@ -159,7 +159,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../stores/user'
 import { useCompetitionStore } from '../stores/competition'
@@ -178,15 +178,15 @@ const stats = ref({
   best_score: 0
 })
 
+const currentCompetition = computed(() => competitionStore.selectedCompetition)
+
 const loadStatistics = async () => {
   try {
-    stats.value = await statisticsAPI.getStatistics()
+    stats.value = await statisticsAPI.getStatistics(competitionStore.selectedCompetitionId)
   } catch (error) {
     console.error('Failed to load statistics:', error)
   }
 }
-
-const currentCompetition = computed(() => competitionStore.selectedCompetition)
 
 const competitionInfoMap = {
   ppi: {
@@ -236,6 +236,11 @@ const downloadDataset = () => {
   window.open(url, '_blank')
   ElMessage.success(`Downloading ${currentCompetition.value?.title} dataset`)
 }
+
+// 监听竞赛切换
+watch(() => competitionStore.selectedCompetitionId, () => {
+  loadStatistics()
+})
 
 onMounted(() => {
   competitionStore.loadCompetitions()

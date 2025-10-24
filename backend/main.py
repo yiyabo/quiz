@@ -426,14 +426,31 @@ def get_leaderboard(
 
 # ==================== 统计信息 ====================
 @app.get("/api/statistics", response_model=Statistics)
-def get_statistics(db: Session = Depends(get_db)):
-    """获取平台统计信息"""
+def get_statistics(competition_id: int = None, db: Session = Depends(get_db)):
+    """获取平台统计信息（可按竞赛筛选）"""
     
-    total_users = db.query(func.count(User.id)).scalar()
-    total_submissions = db.query(func.count(Submission.id)).scalar()
+    # 统计参与用户数（有成功提交的用户）
+    user_query = db.query(func.count(func.distinct(Submission.user_id))).filter(
+        Submission.status == 'success'
+    )
+    if competition_id:
+        user_query = user_query.filter(Submission.competition_id == competition_id)
+    total_users = user_query.scalar()
     
-    # 只统计成功的提交
-    successful_submissions = db.query(Submission).filter(Submission.status == 'success').all()
+    # 统计提交次数（只统计成功的）
+    submission_query = db.query(func.count(Submission.id)).filter(
+        Submission.status == 'success'
+    )
+    if competition_id:
+        submission_query = submission_query.filter(Submission.competition_id == competition_id)
+    total_submissions = submission_query.scalar()
+    
+    # 统计最佳分数和平均分数
+    score_query = db.query(Submission).filter(Submission.status == 'success')
+    if competition_id:
+        score_query = score_query.filter(Submission.competition_id == competition_id)
+    
+    successful_submissions = score_query.all()
     
     if successful_submissions:
         scores = [s.final_score for s in successful_submissions if s.final_score is not None]
